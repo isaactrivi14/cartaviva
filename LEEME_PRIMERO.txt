@@ -1,0 +1,27 @@
+CARTAVIVA - LEEME PRIMERO
+=========================
+
+Equipo: Katiusca Quiroz, Miguel Ortega, Gabriel Ruiz Rivera, Isaac David Trivino Ruiz, Jhon Perez
+
+ENLACES (ya estan publicados, no hay que hacer nada)
+- Esqueleto en el celular:  https://cartaviva-ten.vercel.app
+- Codigo en GitHub:         https://github.com/isaactrivi14/cartaviva
+- QR del esqueleto:         entregables/QR_esqueleto_cartaviva.png
+
+QUE PRESENTAR
+- Ficha del proyecto:  entregables/Cartaviva_Ficha_Proyecto.docx
+- Presentacion:        entregables/Cartaviva_Presentacion.pptx
+  (la diapositiva 9 tiene el QR para que la profesora y los companeros
+   abran el esqueleto en el celular; cada diapositiva tiene notas)
+
+COMO CORRER EL MVP EN TU PORTATIL
+1. Necesitas Python 3.12 o superior (python.org, marcando "Add python.exe to PATH").
+2. Haz doble clic en  iniciar.bat
+   La primera vez tarda unos minutos (necesita internet). Al final se abre
+   el navegador en http://127.0.0.1:8000
+3. Entra con:
+     anfitrion@cartaviva.co   o   asistente@cartaviva.co
+     Contrasena: Cartaviva2026!
+4. Para apagarlo, cierra la ventana negra.
+
+El guion para mostrar el MVP en 5 minutos esta en README.md (seccion 3).
