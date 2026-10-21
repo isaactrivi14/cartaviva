@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block titulo %}Mi pase{% endblock %}
+{% block contenido %}
+<div class="pase">
+  <div class="pase__tarjeta">
+    <div class="fila" style="justify-content:space-between">
+      {% if inscripcion.check_in_at %}<span class="etiqueta etiqueta--ok">Ya ingresaste · {{ inscripcion.check_in_at|date:"g:i a" }}</span>{% else %}<span class="etiqueta etiqueta--ok">Inscripción confirmada</span>{% endif %}
+      <span class="suave pequeno">Pase n.º {{ inscripcion.numero }}</span>
+    </div>
+    <div>
+      <h1 style="font-size:1.3rem;margin:0">{{ inscripcion.evento.titulo }}</h1>
+      <div class="suave pequeno">{{ inscripcion.evento.fecha_inicio|date:"D d M, g:i a" }} · {{ inscripcion.evento.barrio }}</div>
+    </div>
+    <div class="pase__qr" role="img" aria-label="Código QR de tu pase">{{ qr_svg|safe }}</div>
+    <div class="fila" style="border-top:1px dashed var(--linea);padding-top:12px">
+      {% if user.foto %}<img class="avatar avatar--chico" src="{{ user.foto.url }}" alt="">{% else %}<span class="avatar avatar--chico" aria-hidden="true"></span>{% endif %}
+      <div><strong>{{ user.alias }}</strong><div class="suave pequeno">Muéstralo en la entrada del evento</div></div>
+    </div>
+    <details class="pequeno">
+      <summary>¿No funciona la cámara del anfitrión?</summary>
+      <p style="margin-top:8px">Dile este código para que lo escriba a mano:</p>
+      <code style="word-break:break-all;font-size:.75rem">{{ inscripcion.codigo_qr }}</code>
+    </details>
+  </div>
+  <div class="pase__nota">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#F77F00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex:none"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M9 12l2 2 4-4"/></svg>
+    <span>El QR solo lleva un código firmado, sin datos personales. El anfitrión verá tu foto, tu alias y si eres mayor de edad. Nada más.</span>
+  </div>
+</div>
+<p style="text-align:center;margin-top:16px"><a href="{% url 'inscripciones:mis_pases' %}">Ver todos mis pases</a></p>
+{% endblock %}

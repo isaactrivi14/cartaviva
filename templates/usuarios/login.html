@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block titulo %}Ingresar{% endblock %}
+{% block contenido %}
+<div style="max-width:420px;margin:0 auto">
+  <h1>Ingresar</h1>
+  <form method="post" novalidate class="pila">
+    {% csrf_token %}
+    {% if form.non_field_errors %}<div class="mensaje mensaje--error">Correo o contraseña incorrectos.</div>{% endif %}
+    {% include "partials/campo.html" with campo=form.username %}
+    {% include "partials/campo.html" with campo=form.password %}
+    <input type="hidden" name="next" value="{{ next }}">
+    <button class="boton boton--bloque" type="submit">Ingresar</button>
+  </form>
+  <p class="suave" style="text-align:center;margin-top:16px">¿No tienes cuenta? <a href="{% url 'usuarios:registro' %}">Créala aquí</a></p>
+</div>
+{% endblock %}

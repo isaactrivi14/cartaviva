@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% load static %}
+{% block titulo %}Escáner{% endblock %}
+{% block contenido %}
+<div class="escaner">
+  <div class="fila" style="justify-content:space-between;margin-bottom:12px">
+    <div>
+      <h1 style="font-size:1.15rem;margin:0;color:#fff">Escanear pases</h1>
+      <div class="pequeno" style="color:#B8C4D1">{{ evento.titulo }} · <span id="contador">{{ evento.ingresados }} de {{ evento.inscritos }}</span> ingresados</div>
+    </div>
+    <a class="boton boton--borde boton--chico" href="{% url 'eventos:panel' %}">Salir</a>
+  </div>
+
+  <div id="lector" class="escaner__camara" aria-label="Vista de la cámara"></div>
+  <p id="estado-camara" class="pequeno" style="color:#B8C4D1;margin:8px 0 0">Permite el acceso a la cámara para escanear.</p>
+
+  <form id="manual" class="fila" style="margin-top:12px;flex-wrap:nowrap">
+    <label for="codigo" class="oculto-visual">Código del pase</label>
+    <input id="codigo" type="text" placeholder="O pega el código del pase" autocomplete="off" style="flex:1;min-height:44px;border-radius:12px;border:0;padding:0 12px;font:inherit">
+    <button class="boton boton--sol boton--chico" type="submit">Validar</button>
+  </form>
+
+  <section id="resultado" class="resultado" aria-live="polite">
+    <div class="fila" style="flex-wrap:nowrap">
+      <img id="r-foto" class="avatar" alt="" hidden>
+      <span id="r-sin-foto" class="avatar" aria-hidden="true"></span>
+      <div style="flex:1">
+        <div id="r-alias" style="font-size:1.2rem;font-weight:800"></div>
+        <div class="fila" style="gap:6px;margin-top:4px">
+          <span id="r-estado" class="etiqueta"></span>
+          <span id="r-edad" class="etiqueta etiqueta--ABIERTO" hidden>+18 verificado</span>
+        </div>
+      </div>
+    </div>
+    <p id="r-mensaje" style="margin:10px 0 0;font-weight:600"></p>
+    <div class="protegido">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true" style="flex:none"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
+      Correo y fecha de nacimiento protegidos (Ley 1581 de 2012)
+    </div>
+    <div class="rejilla rejilla--2" style="gap:8px">
+      <button id="otro" class="boton boton--borde" type="button">Escanear otro</button>
+      <button id="confirmar" class="boton" type="button">Registrar ingreso</button>
+    </div>
+  </section>
+</div>
+{% csrf_token %}
+{% endblock %}
+{% block scripts %}
+<script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+<script src="{% static 'js/escaner.js' %}"></script>
+<script>Cartaviva.iniciarEscaner({ url: "{% url 'inscripciones:validar' evento.pk %}" });</script>
+{% endblock %}

@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#1D3557">
+<title>Cartaviva · Esqueleto de la página</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root { --azul:#0077B6; --sol:#F77F00; --colonial:#1D3557; --arena:#F8F9FA; --suave:#4A5B70; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--colonial); color: var(--arena); font-family: 'Plus Jakarta Sans', system-ui, sans-serif; }
+  main { max-width: 560px; margin: 0 auto; padding: 32px 16px 40px; }
+  .eyebrow { color: var(--sol); font-weight: 700; font-size: 13px; letter-spacing: .12em; text-transform: uppercase; margin: 0 0 8px; }
+  h1 { font-size: 40px; line-height: 1.05; letter-spacing: -.03em; margin: 0 0 12px; font-weight: 800; }
+  p { color: #DCE6F0; line-height: 1.5; margin: 0 0 16px; }
+  ol { list-style: none; padding: 0; margin: 24px 0; display: grid; gap: 10px; counter-reset: paso; }
+  li a { display: flex; align-items: center; gap: 14px; padding: 14px 16px; border-radius: 12px; background: #F8F9FA; color: var(--colonial); text-decoration: none; transition: transform 200ms ease, box-shadow 200ms ease; }
+  li a:hover, li a:focus-visible { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,.25); }
+  li a:active { transform: scale(.98); }
+  .num { width: 36px; height: 36px; flex: none; border-radius: 10px; background: #E3F1F9; color: #005A8C; display: grid; place-items: center; font-weight: 800; }
+  .anf .num { background: #FFE8CC; color: #7A3E00; }
+  .nombre { font-weight: 700; display: block; }
+  .desc { font-size: 13px; color: var(--suave); }
+  .equipo { font-size: 13px; color: #B8C8DA; border-top: 1px solid rgba(255,255,255,.15); padding-top: 16px; }
+</style>
+</head>
+<body>
+<main>
+  <p class="eyebrow">Entregable 1 · Esqueleto de la página</p>
+  <h1>Cartaviva</h1>
+  <p>Eventos comunitarios de Cartagena en un mapa, con inscripción y check-in QR que protege tus datos. Toca una pantalla para recorrer el flujo.</p>
+  <ol>
+    <li><a href="registro.html"><span class="num">1</span><span><span class="nombre">Registro</span><span class="desc">Alias, foto, rol y autorización de datos</span></span></a></li>
+    <li><a href="explorar.html"><span class="num">2</span><span><span class="nombre">Explorar</span><span class="desc">Mapa de Cartagena con estados y filtros</span></span></a></li>
+    <li><a href="detalle.html"><span class="num">3</span><span><span class="nombre">Detalle del evento</span><span class="desc">Cupos, anfitrión e inscripción</span></span></a></li>
+    <li><a href="pase.html"><span class="num">4</span><span><span class="nombre">Mi pase QR</span><span class="desc">Código firmado sin datos personales</span></span></a></li>
+    <li class="anf"><a href="escaner.html"><span class="num">5</span><span><span class="nombre">Escáner del anfitrión</span><span class="desc">Validación ciega: foto, alias y +18</span></span></a></li>
+    <li class="anf"><a href="panel.html"><span class="num">6</span><span><span class="nombre">Panel del anfitrión</span><span class="desc">CRUD de eventos y tasa de asistencia</span></span></a></li>
+  </ol>
+  <p class="equipo">Katiusca Quiroz · Miguel Ortega · Gabriel Ruiz Rivera · Isaac David Triviño Ruiz · Jhon Perez<br>Diseño Web + Aplicaciones Web II · Institución Universitaria Rafael Núñez</p>
+</main>
+</body>
+</html>

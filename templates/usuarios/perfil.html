@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block titulo %}Mi perfil{% endblock %}
+{% block contenido %}
+<div style="max-width:560px;margin:0 auto" class="pila">
+  <div class="tarjeta fila">
+    {% if user.foto %}<img class="avatar" src="{{ user.foto.url }}" alt="">{% else %}<span class="avatar" aria-hidden="true"></span>{% endif %}
+    <div>
+      <h1 style="margin:0">{{ user.alias }}</h1>
+      <div class="suave">{{ user.get_rol_display }} · {{ user.email }}</div>
+    </div>
+  </div>
+
+  <section class="tarjeta pila" aria-label="Pasaporte Cartagenero">
+    <div class="fila" style="justify-content:space-between">
+      <h2 style="margin:0">Pasaporte Cartagenero</h2>
+      <span class="etiqueta etiqueta--ABIERTO">{{ pasaporte.nivel }}</span>
+    </div>
+    <div class="metricas">
+      <div class="metrica"><strong>{{ pasaporte.eventos }}</strong><span>Eventos pasados</span></div>
+      <div class="metrica"><strong>{{ pasaporte.asistencias }}</strong><span>Asistió con QR</span></div>
+      <div class="metrica metrica--azul"><strong>{% if pasaporte.tasa is not None %}{{ pasaporte.tasa }}%{% else %}—{% endif %}</strong><span>Cumplimiento</span></div>
+    </div>
+    <p class="suave pequeno" style="margin:0">Tu reputación sube cuando asistes a los eventos a los que te inscribes. Los anfitriones la ven, pero nunca ven tus datos personales.</p>
+  </section>
+
+  <section class="tarjeta pila">
+    <h2 style="margin:0">Tus datos</h2>
+    <p class="pequeno" style="margin:0">Guardamos solo alias, correo, foto y fecha de nacimiento. Autorizaste el tratamiento de datos el {{ user.fecha_autorizacion|date:"d/m/Y" }}.
+      <a href="{% url 'usuarios:privacidad' %}">Política de privacidad</a></p>
+  </section>
+
+  <form method="post" action="{% url 'usuarios:logout' %}">{% csrf_token %}<button class="boton boton--borde boton--bloque" type="submit">Cerrar sesión</button></form>
+</div>
+{% endblock %}

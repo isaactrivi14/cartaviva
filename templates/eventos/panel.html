@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block titulo %}Panel del anfitrión{% endblock %}
+{% block contenido %}
+<div class="fila" style="justify-content:space-between;margin-bottom:16px">
+  <div>
+    <div class="suave pequeno">Rol: {{ user.get_rol_display }}</div>
+    <h1 style="margin:0">Mis eventos</h1>
+  </div>
+  <a class="boton" href="{% url 'eventos:crear' %}">+ Crear evento</a>
+</div>
+
+<section class="tarjeta pila" aria-label="Métricas generales" style="margin-bottom:16px">
+  <h2 style="margin:0">Asistencia efectiva</h2>
+  <div class="metricas">
+    <div class="metrica"><strong>{{ total_inscritos }}</strong><span>Inscritos</span></div>
+    <div class="metrica"><strong>{{ total_ingresados }}</strong><span>Entraron con QR</span></div>
+    <div class="metrica metrica--azul"><strong>{{ tasa_global }}%</strong><span>Asistencia</span></div>
+  </div>
+  <div class="barra" aria-hidden="true"><div style="width:{{ tasa_global }}%"></div></div>
+  <p class="suave pequeno" style="margin:0">Tasa de asistencia efectiva = ingresados con QR ÷ inscritos.</p>
+</section>
+
+{% if eventos %}
+<div class="tarjeta desborde">
+  <table class="tabla-simple">
+    <thead><tr><th>Evento</th><th>Fecha</th><th>Estado</th><th>Inscritos</th><th>Asistencia</th><th><span class="oculto-visual">Acciones</span></th></tr></thead>
+    <tbody>
+    {% for e in eventos %}
+      <tr>
+        <td><a href="{{ e.get_absolute_url }}"><strong>{{ e.titulo }}</strong></a>{% if e.es_relampago %} <span class="etiqueta etiqueta--relampago">Relámpago</span>{% endif %}<br><span class="suave pequeno">{{ e.categoria }} · {{ e.barrio }}</span></td>
+        <td class="pequeno">{{ e.fecha_inicio|date:"d/m/Y g:i a" }}</td>
+        <td><span class="etiqueta etiqueta--{{ e.estado }}">{{ e.estado_label }}</span></td>
+        <td>{{ e.inscritos }}/{{ e.cupo_maximo }}</td>
+        <td>{{ e.ingresados }} ({{ e.tasa_asistencia }}%)</td>
+        <td>
+          <div class="fila" style="gap:6px;flex-wrap:nowrap">
+            <a class="boton boton--oscuro boton--chico" href="{% url 'inscripciones:escaner' e.pk %}">Escanear</a>
+            <a class="boton boton--borde boton--chico" href="{% url 'eventos:editar' e.pk %}">Editar</a>
+            <form method="post" action="{% url 'eventos:eliminar' e.pk %}" onsubmit="return confirm('¿Eliminar «{{ e.titulo|escapejs }}»? También se borran sus inscripciones.')">
+              {% csrf_token %}<button class="boton boton--peligro boton--chico" type="submit">Eliminar</button>
+            </form>
+          </div>
+        </td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% else %}
+<div class="tarjeta vacio">Todavía no has publicado eventos. <a href="{% url 'eventos:crear' %}">Crea el primero</a>.</div>
+{% endif %}
+{% endblock %}
