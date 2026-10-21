@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block titulo %}Crear cuenta{% endblock %}
+{% block contenido %}
+<div style="max-width:480px;margin:0 auto">
+  <h1>Crea tu cuenta</h1>
+  <p class="suave">Solo pedimos los datos que la app necesita. No pedimos cédula ni teléfono.</p>
+  <form method="post" enctype="multipart/form-data" novalidate class="pila">
+    {% csrf_token %}
+    {% include "partials/campo.html" with campo=form.alias %}
+    {% include "partials/campo.html" with campo=form.email %}
+    {% include "partials/campo.html" with campo=form.foto %}
+    {% include "partials/campo.html" with campo=form.fecha_nacimiento %}
+    {% include "partials/campo.html" with campo=form.password1 %}
+    {% include "partials/campo.html" with campo=form.password2 %}
+    <fieldset class="campo" style="border:0;padding:0;margin:0">
+      <legend>Quiero usar Cartaviva como</legend>
+      <div class="opciones-rol">{% for opcion in form.rol %}<label>{{ opcion.tag }} {{ opcion.choice_label }}</label>{% endfor %}</div>
+      {% for e in form.rol.errors %}<div class="error">{{ e }}</div>{% endfor %}
+    </fieldset>
+    {% url 'usuarios:privacidad' as url_privacidad %}
+    {% include "partials/campo.html" with campo=form.acepta_tratamiento_datos extra='<a href="'|add:url_privacidad|add:'" target="_blank">Leer la política</a>' %}
+    <button class="boton boton--bloque" type="submit">Crear cuenta</button>
+  </form>
+  <p class="suave" style="text-align:center;margin-top:16px">¿Ya tienes cuenta? <a href="{% url 'usuarios:login' %}">Inicia sesión</a></p>
+</div>
+{% endblock %}

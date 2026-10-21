@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% load static %}
+{% block titulo %}{{ evento.titulo }}{% endblock %}
+{% block head %}<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">{% endblock %}
+{% block contenido %}
+<p><a href="{% url 'eventos:explorar' %}">← Volver al mapa</a></p>
+<div class="rejilla rejilla--2">
+  <div class="pila">
+    <div class="fila" style="gap:6px">
+      <span class="etiqueta etiqueta--{{ evento.estado }}">{{ evento.estado_label }}</span>
+      {% if evento.es_relampago %}<span class="etiqueta etiqueta--relampago">Plan relámpago · vence en {{ evento.horas_para_vencer }} h</span>{% endif %}
+      {% if evento.solo_mayores_18 %}<span class="etiqueta etiqueta--neutra">+18</span>{% endif %}
+      <span class="etiqueta etiqueta--neutra">{{ evento.categoria }}</span>
+    </div>
+    <h1>{{ evento.titulo }}</h1>
+
+    <div class="tarjeta pila">
+      <div><strong>Cuándo:</strong> {{ evento.fecha_inicio|date:"l j \d\e F, g:i a" }} a {{ evento.fecha_fin|date:"g:i a" }}</div>
+      <div><strong>Dónde:</strong> {{ evento.direccion }} · {{ evento.barrio }}, Cartagena</div>
+      <div><strong>Cupos:</strong> {{ evento.inscritos }} de {{ evento.cupo_maximo }} ocupados · quedan {{ evento.cupos_restantes }}</div>
+      <div class="barra barra--sol" aria-hidden="true"><div style="width:{{ evento.porcentaje_ocupacion }}%"></div></div>
+    </div>
+
+    <div class="tarjeta fila">
+      {% if evento.anfitrion.foto %}<img class="avatar avatar--chico" src="{{ evento.anfitrion.foto.url }}" alt="">{% else %}<span class="avatar avatar--chico" aria-hidden="true"></span>{% endif %}
+      <div style="flex:1">
+        <div class="suave pequeno">Anfitrión</div>
+        <strong>{{ evento.anfitrion.alias }}</strong>
+      </div>
+      <span class="etiqueta etiqueta--ABIERTO">Pasaporte: {{ pasaporte_anfitrion.nivel }}</span>
+    </div>
+
+    <div class="tarjeta">
+      <h2>Descripción</h2>
+      <p style="white-space:pre-line">{{ evento.descripcion }}</p>
+    </div>
+
+    <div class="tarjeta pila">
+      {% if inscripcion %}
+        <p><strong>Ya estás inscrito.</strong></p>
+        <a class="boton boton--bloque" href="{% url 'inscripciones:pase' inscripcion.pk %}">Ver mi pase QR</a>
+      {% elif not user.is_authenticated %}
+        <a class="boton boton--bloque" href="{% url 'usuarios:login' %}?next={{ request.path }}">Ingresa para inscribirte</a>
+      {% elif user.es_asistente %}
+        {% if evento.acepta_inscripciones %}
+          <form method="post" action="{% url 'inscripciones:inscribir' evento.pk %}">
+            {% csrf_token %}
+            <button class="boton boton--bloque" type="submit">Inscribirme</button>
+          </form>
+          <p class="suave pequeno" style="text-align:center;margin:0">El servidor valida el cupo y tu mayoría de edad antes de darte el pase.</p>
+        {% else %}
+          <button class="boton boton--bloque" type="button" disabled>{{ evento.estado_label }}</button>
+        {% endif %}
+      {% elif evento.anfitrion_id == user.pk or user.es_admin %}
+        <a class="boton boton--oscuro boton--bloque" href="{% url 'inscripciones:escaner' evento.pk %}">Abrir escáner de este evento</a>
+        <a class="boton boton--borde boton--bloque" href="{% url 'eventos:editar' evento.pk %}">Editar evento</a>
+      {% else %}
+        <p class="suave" style="margin:0">Las cuentas de anfitrión no se inscriben a eventos. Usa una cuenta de asistente.</p>
+      {% endif %}
+    </div>
+  </div>
+  <div>
+    <div id="mapa" class="mapa mapa--chico"></div>
+  </div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+<script src="{% static 'js/mapa.js' %}"></script>
+<script>Cartaviva.iniciarPunto({ punto: { lat: {{ evento.latitud|stringformat:"f" }}, lng: {{ evento.longitud|stringformat:"f" }} } });</script>
+{% endblock %}

@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block titulo %}Mis pases{% endblock %}
+{% block contenido %}
+<h1>Mis pases</h1>
+<div class="pila" style="max-width:640px">
+  {% for i in inscripciones %}
+    <div class="tarjeta fila" style="justify-content:space-between">
+      <div>
+        <div class="fila" style="gap:6px">
+          <span class="etiqueta etiqueta--{{ i.evento.estado }}">{{ i.evento.estado_label }}</span>
+          {% if i.check_in_at %}<span class="etiqueta etiqueta--ok">Asististe</span>{% endif %}
+        </div>
+        <div class="evento-item__titulo">{{ i.evento.titulo }}</div>
+        <div class="evento-item__meta">{{ i.evento.fecha_inicio|date:"D d M, g:i a" }} · {{ i.evento.barrio }}</div>
+      </div>
+      <div class="fila" style="gap:6px">
+        <a class="boton boton--chico" href="{% url 'inscripciones:pase' i.pk %}">Ver QR</a>
+        {% if not i.check_in_at and i.evento.estado != "FINALIZADO" %}
+        <form method="post" action="{% url 'inscripciones:cancelar' i.pk %}" onsubmit="return confirm('¿Cancelar tu inscripción? Liberarás el cupo.')">
+          {% csrf_token %}<button class="boton boton--peligro boton--chico" type="submit">Cancelar</button>
+        </form>
+        {% endif %}
+      </div>
+    </div>
+  {% empty %}
+    <div class="tarjeta vacio">Aún no tienes pases. <a href="{% url 'eventos:explorar' %}">Busca un plan en el mapa</a>.</div>
+  {% endfor %}
+</div>
+{% endblock %}

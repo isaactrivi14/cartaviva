@@ -1,0 +1,18 @@
+{# Pinta un campo de formulario con su etiqueta, ayuda y errores del servidor. #}
+{% if campo.field.widget.input_type == "checkbox" %}
+<div class="campo campo--check{% if campo.errors %} campo--error{% endif %}">
+  {{ campo }}
+  <div>
+    <label for="{{ campo.id_for_label }}">{{ campo.label }}{% if extra %} {{ extra|safe }}{% endif %}</label>
+    {% if campo.help_text %}<div class="ayuda">{{ campo.help_text }}</div>{% endif %}
+    {% for e in campo.errors %}<div class="error">{{ e }}</div>{% endfor %}
+  </div>
+</div>
+{% else %}
+<div class="campo{% if campo.errors %} campo--error{% endif %}">
+  <label for="{{ campo.id_for_label }}">{{ campo.label }}</label>
+  {{ campo }}
+  {% if campo.help_text %}<div class="ayuda">{{ campo.help_text|safe }}</div>{% endif %}
+  {% for e in campo.errors %}<div class="error">{{ e }}</div>{% endfor %}
+</div>
+{% endif %}

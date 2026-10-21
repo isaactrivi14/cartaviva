@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% load static %}
+{% block titulo %}{% if modo == "crear" %}Crear evento{% else %}Editar evento{% endif %}{% endblock %}
+{% block head %}<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">{% endblock %}
+{% block contenido %}
+<p><a href="{% url 'eventos:panel' %}">← Volver al panel</a></p>
+<h1>{% if modo == "crear" %}Crear evento{% else %}Editar «{{ evento.titulo }}»{% endif %}</h1>
+
+<form method="post" novalidate class="rejilla rejilla--2">
+  {% csrf_token %}
+  {% if form.non_field_errors %}<div class="mensaje mensaje--error">{{ form.non_field_errors|join:" " }}</div>{% endif %}
+  <div class="tarjeta pila">
+    {% include "partials/campo.html" with campo=form.titulo %}
+    {% include "partials/campo.html" with campo=form.categoria %}
+    {% include "partials/campo.html" with campo=form.descripcion %}
+    {% include "partials/campo.html" with campo=form.es_relampago %}
+    <div class="rejilla rejilla--2">
+      {% include "partials/campo.html" with campo=form.fecha_inicio %}
+      {% include "partials/campo.html" with campo=form.fecha_fin %}
+    </div>
+    <div class="rejilla rejilla--2">
+      {% include "partials/campo.html" with campo=form.cupo_maximo %}
+      <div style="align-self:end">{% include "partials/campo.html" with campo=form.solo_mayores_18 %}</div>
+    </div>
+  </div>
+  <div class="tarjeta pila">
+    {% include "partials/campo.html" with campo=form.direccion %}
+    {% include "partials/campo.html" with campo=form.barrio %}
+    <div id="mapa" class="mapa mapa--chico" aria-label="Toca el mapa para ubicar el evento"></div>
+    <div class="rejilla rejilla--2">
+      {% include "partials/campo.html" with campo=form.latitud %}
+      {% include "partials/campo.html" with campo=form.longitud %}
+    </div>
+    <button class="boton boton--bloque" type="submit">{% if modo == "crear" %}Publicar evento{% else %}Guardar cambios{% endif %}</button>
+  </div>
+</form>
+{% endblock %}
+{% block scripts %}
+{{ centro|json_script:"centro" }}
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+<script src="{% static 'js/mapa.js' %}"></script>
+<script>Cartaviva.iniciarSelector({ centro: JSON.parse(document.getElementById("centro").textContent) });</script>
+{% endblock %}

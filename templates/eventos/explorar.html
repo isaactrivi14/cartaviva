@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% load static %}
+{% block titulo %}Explorar{% endblock %}
+{% block head %}
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
+{% endblock %}
+{% block contenido %}
+<div class="pila" style="margin-bottom:16px">
+  <h1>Planes en Cartagena</h1>
+  <form id="filtros" class="pila" method="get" action="">
+    <div class="chips" role="group" aria-label="Fecha">
+      <button class="chip{% if filtros.fecha == 'hoy' %} activo{% endif %}" type="submit" name="fecha" value="hoy">Hoy</button>
+      <button class="chip{% if filtros.fecha == 'semana' %} activo{% endif %}" type="submit" name="fecha" value="semana">Esta semana</button>
+      <button class="chip{% if not filtros.fecha or filtros.fecha == 'todas' %} activo{% endif %}" type="submit" name="fecha" value="todas">Todas</button>
+      <a class="chip chip--sol{% if filtros.relampago == '1' %} activo{% endif %}" href="?relampago={% if filtros.relampago == '1' %}0{% else %}1{% endif %}">Relámpago</a>
+      <button class="chip" type="button" id="cerca">Cerca de mí</button>
+    </div>
+    <div class="campo" style="max-width:320px">
+      <label for="categoria" class="oculto-visual">Categoría</label>
+      <select id="categoria" name="categoria" onchange="this.form.submit()">
+        <option value="">Todas las categorías</option>
+        {% for c in categorias %}<option value="{{ c.pk }}"{% if filtros.categoria == c.pk|stringformat:'s' %} selected{% endif %}>{{ c.nombre }}</option>{% endfor %}
+      </select>
+    </div>
+    {% if filtros.fecha %}<input type="hidden" name="fecha" value="{{ filtros.fecha }}">{% endif %}
+  </form>
+</div>
+
+<div class="rejilla rejilla--explorar">
+  <section aria-label="Mapa de eventos">
+    <div id="mapa" class="mapa"></div>
+    <div class="leyenda" aria-hidden="true">
+      <span><i class="punto" style="background:#0077B6"></i>Abierto</span>
+      <span><i class="punto" style="background:#F77F00"></i>Últimos cupos</span>
+      <span><i class="punto" style="background:#8A96A3"></i>Lleno</span>
+      <span><i class="punto" style="background:#D62839"></i>En vivo</span>
+    </div>
+  </section>
+
+  <section aria-label="Lista de eventos" class="pila">
+    <h2 id="titulo-lista">{{ eventos|length }} evento{{ eventos|length|pluralize }}</h2>
+    <div id="lista" class="pila">
+      {% for e in eventos %}
+        <a class="evento-item" href="{{ e.get_absolute_url }}">
+          <span class="evento-item__color" style="background:{{ e.categoria.color }}"></span>
+          <div>
+            <div class="fila" style="gap:6px">
+              <span class="etiqueta etiqueta--{{ e.estado }}">{{ e.estado_label }}</span>
+              {% if e.es_relampago %}<span class="etiqueta etiqueta--relampago">Relámpago</span>{% endif %}
+            </div>
+            <div class="evento-item__titulo">{{ e.titulo }}</div>
+            <div class="evento-item__meta">{{ e.categoria }} · {{ e.fecha_inicio|date:"D d M, g:i a" }} · {{ e.barrio }}</div>
+          </div>
+        </a>
+      {% empty %}
+        <div class="tarjeta vacio">No hay eventos con esos filtros. Prueba con «Todas».</div>
+      {% endfor %}
+    </div>
+  </section>
+</div>
+{% endblock %}
+
+{% block scripts %}
+{{ centro|json_script:"centro" }}
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+<script src="{% static 'js/mapa.js' %}"></script>
+<script>
+  Cartaviva.iniciarExplorar({
+    api: "{% url 'eventos:api' %}",
+    centro: JSON.parse(document.getElementById("centro").textContent),
+  });
+</script>
+{% endblock %}

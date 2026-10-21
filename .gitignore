@@ -1,0 +1,21 @@
+# Entorno y secretos
+.venv/
+venv/
+.env
+
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Base de datos local y archivos subidos
+db.sqlite3
+media/
+staticfiles/
+
+# Editor y sistema
+.vscode/*
+!.vscode/extensions.json
+.DS_Store
+Thumbs.db
+.vercel/
