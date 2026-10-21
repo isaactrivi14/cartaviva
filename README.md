@@ -5,6 +5,9 @@ Proyecto articulado entre **Diseño Web** y **Aplicaciones Web II**, Institució
 
 **Equipo:** Katiusca Quiroz · Miguel Ortega · Gabriel Ruiz Rivera · Isaac David Triviño Ruiz · Jhon Perez
 
+**Esqueleto publicado:** https://cartaviva-ten.vercel.app (QR en `entregables/QR_esqueleto_cartaviva.png`)
+**Repositorio:** https://github.com/isaactrivi14/cartaviva
+
 Stack: Python · Django 5.2 · MySQL (o SQLite para probar) · HTML5 · CSS3 · JavaScript · pytest
 
 ---
