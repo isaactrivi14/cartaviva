@@ -10,6 +10,7 @@ ENLACES (ya estan publicados, no hay que hacer nada)
 
 QUE PRESENTAR
 - Ficha del proyecto:  entregables/Cartaviva_Ficha_Proyecto.docx
+- Requisitos (Clase 2): entregables/Cartaviva_Documento_Requisitos.docx
 - Presentacion:        entregables/Cartaviva_Presentacion.pptx
   (la diapositiva 9 tiene el QR para que la profesora y los companeros
    abran el esqueleto en el celular; cada diapositiva tiene notas)
