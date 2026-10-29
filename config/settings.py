@@ -34,6 +34,15 @@ if not DEBUG:
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
     SECURE_CONTENT_TYPE_NOSNIFF = True
+    # Todo el sitio por HTTPS: el escáner necesita HTTPS para usar la cámara.
+    SECURE_SSL_REDIRECT = env_bool("SECURE_SSL_REDIRECT", True)
+    # El hosting entrega la petición por un proxy; este encabezado dice si llegó por HTTPS.
+    SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+    # HSTS: el navegador recuerda que solo debe entrar por HTTPS. Se empieza con 1 hora.
+    SECURE_HSTS_SECONDS = int(os.getenv("SECURE_HSTS_SECONDS", "3600"))
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    # No pedimos entrar a la lista "preload" de los navegadores: el dominio es del hosting, no nuestro.
+    SILENCED_SYSTEM_CHECKS = ["security.W021"]
 
 # --- Aplicaciones ----------------------------------------------------------
 INSTALLED_APPS = [

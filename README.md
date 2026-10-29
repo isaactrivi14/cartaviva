@@ -20,7 +20,7 @@ Stack: Python · Django 5.2 · MySQL (o SQLite para probar) · HTML5 · CSS3 · 
 | `esqueleto/` | El esqueleto de 6 pantallas como sitio web estático, listo para publicar en Vercel |
 | `config/`, `usuarios/`, `eventos/`, `inscripciones/` | El MVP en Django (backend) |
 | `templates/`, `static/` | Las pantallas del MVP (HTML, CSS y JavaScript) |
-| `tests/` | 11 pruebas automatizadas con pytest |
+| `tests/` | 12 pruebas automatizadas con pytest |
 | `iniciar.bat` | Instala y arranca todo con doble clic (Windows) |
 | `iniciar.sh` | Lo mismo para macOS o Linux |
 | `publicar.bat` | Sube el proyecto a tu GitHub y publica el esqueleto en tu Vercel (Windows) |
@@ -128,7 +128,7 @@ Con el entorno activado (`.venv\Scripts\activate`):
 pytest -v
 ```
 
-Son 11 pruebas (la guía pide mínimo 6). Cubren el estado del evento, la tasa de asistencia, los planes relámpago, la ubicación dentro de Cartagena, la autorización de datos en el registro, el rechazo a menores en eventos +18, el cupo y la doble inscripción, los permisos por rol y la validación ciega del QR.
+Son 12 pruebas (la guía pide mínimo 6). Cubren el estado del evento, la tasa de asistencia, los planes relámpago, la ubicación dentro de Cartagena, la autorización de datos en el registro, el rechazo a menores en eventos +18, el cupo y la doble inscripción, los permisos por rol, la validación ciega del QR y la configuración de seguridad para producción.
 
 ---
 
@@ -198,4 +198,5 @@ Cada vez que hagan *Commit* y *Sync* en VS Code, Vercel vuelve a publicar solo.
 - [ ] `DB_ENGINE=mysql` con la base de datos del hosting
 - [ ] `python manage.py migrate` y `python manage.py collectstatic`
 - [ ] HTTPS activo (necesario para que el escáner use la cámara del celular)
+- [ ] `python manage.py check --deploy` sin advertencias (lo comprueba la prueba `test_configuracion_de_produccion_pasa_check_deploy`)
 - [ ] Crear el superusuario con `python manage.py createsuperuser`
