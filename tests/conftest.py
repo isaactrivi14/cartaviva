@@ -16,6 +16,12 @@ def crear_usuario(email, rol=Usuario.Rol.ASISTENTE, años=25):
     )
 
 
+@pytest.fixture(autouse=True)
+def sin_redireccion_https(settings):
+    # Si el .env tiene DEBUG=False, el cliente de pruebas recibiría 301 hacia HTTPS.
+    settings.SECURE_SSL_REDIRECT = False
+
+
 @pytest.fixture
 def anfitrion(db):
     return crear_usuario("anfitrion@test.co", Usuario.Rol.ANFITRION)

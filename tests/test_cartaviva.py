@@ -4,8 +4,13 @@ Cubren modelos, validaciones, formularios, permisos por rol y la validación cie
 Ejecutar:  pytest -v
 """
 import json
+import os
+import secrets
+import subprocess
+import sys
 from datetime import timedelta
 from decimal import Decimal
+from pathlib import Path
 
 import pytest
 from django.core.exceptions import ValidationError
@@ -156,3 +161,13 @@ def test_api_del_mapa_devuelve_eventos_de_la_bd_sin_los_finalizados(client, hace
     titulos = [e["titulo"] for e in datos["eventos"]]
     assert "Evento vigente" in titulos
     assert "Evento viejo" not in titulos
+
+
+def test_configuracion_de_produccion_pasa_check_deploy():
+    # Arranca Django como en el servidor (DEBUG=False) y exige cero advertencias de seguridad.
+    entorno = {**os.environ, "DEBUG": "False", "SECRET_KEY": secrets.token_urlsafe(50), "DB_ENGINE": "sqlite"}
+    resultado = subprocess.run(
+        [sys.executable, "manage.py", "check", "--deploy", "--fail-level", "WARNING"],
+        cwd=Path(__file__).resolve().parent.parent, env=entorno, capture_output=True, text=True,
+    )
+    assert resultado.returncode == 0, resultado.stderr + resultado.stdout
