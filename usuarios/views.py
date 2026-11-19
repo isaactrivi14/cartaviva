@@ -17,7 +17,6 @@ def registro(request):
             login(request, usuario)
             messages.success(request, f"¡Bienvenido a Cartaviva, {usuario.alias}!")
             return redirect("eventos:explorar")
-        messages.error(request, "Revisa los campos marcados.")
     else:
         form = RegistroForm()
     return render(request, "usuarios/registro.html", {"form": form})

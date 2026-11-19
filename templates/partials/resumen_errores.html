@@ -1,0 +1,12 @@
+{# Resumen arriba del formulario: qué falló y un enlace a cada campo. mensajes.js le pone el foco. #}
+{% if form.errors %}
+<div class="resumen-errores" id="resumen-errores" role="alert" tabindex="-1">
+  <strong>Revisa {{ form.errors|length }} punto{{ form.errors|length|pluralize }} antes de continuar:</strong>
+  <ul>
+    {% for e in form.non_field_errors %}<li>{{ e }}</li>{% endfor %}
+    {% for campo in form %}{% if campo.errors %}
+    <li><a href="#{{ campo.auto_id }}{% if campo.field.widget.input_type == 'radio' %}_0{% endif %}">{{ campo.label|truncatewords:6 }}</a>: {{ campo.errors|first }}</li>
+    {% endif %}{% endfor %}
+  </ul>
+</div>
+{% endif %}
