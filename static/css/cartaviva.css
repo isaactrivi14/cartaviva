@@ -140,11 +140,30 @@ p { margin: 0 0 .75rem; }
 
 /* Mensajes de estado (django.contrib.messages) */
 .mensajes { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
-.mensaje { padding: 12px 14px; border-radius: var(--radio); font-weight: 600; font-size: .95rem; animation: entrar 250ms ease-out; }
+.mensaje {
+  display: flex; align-items: flex-start; justify-content: space-between; gap: 12px;
+  padding: 12px 14px; border-radius: var(--radio); font-weight: 600; font-size: .95rem;
+  animation: entrar 250ms ease-out; transition: opacity 200ms;
+}
+.mensaje__cerrar {
+  flex: none; min-width: 32px; min-height: 32px; margin: -6px -6px -6px 0; padding: 0;
+  background: none; border: 0; border-radius: 8px; color: inherit; font-size: 1.4rem; line-height: 1; cursor: pointer;
+}
+.mensaje__cerrar:hover { background: rgba(0, 0, 0, .06); }
+.mensaje--saliendo { opacity: 0; }
 .mensaje--success { background: var(--ok-claro); color: var(--ok); }
 .mensaje--error { background: var(--error-claro); color: var(--error); }
 .mensaje--info, .mensaje--warning { background: var(--azul-claro); color: var(--azul-oscuro); }
 @keyframes entrar { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .mensaje { animation: none; transition: none; } }
+
+.resumen-errores {
+  margin-bottom: 16px; padding: 12px 14px; border-left: 4px solid var(--error); border-radius: var(--radio);
+  background: var(--error-claro); color: var(--error);
+}
+.resumen-errores ul { margin: 6px 0 0; padding-left: 18px; }
+.resumen-errores a { color: inherit; font-weight: 700; }
+.resumen-errores:focus { outline: 2px solid var(--error); outline-offset: 2px; }
 
 /* Formularios */
 .campo { display: flex; flex-direction: column; gap: 4px; }

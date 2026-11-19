@@ -4,6 +4,7 @@
 <div style="max-width:480px;margin:0 auto">
   <h1>Crea tu cuenta</h1>
   <p class="suave">Solo pedimos los datos que la app necesita. No pedimos cédula ni teléfono.</p>
+  {% include "partials/resumen_errores.html" %}
   <form method="post" enctype="multipart/form-data" novalidate class="pila">
     {% csrf_token %}
     {% include "partials/campo.html" with campo=form.alias %}
