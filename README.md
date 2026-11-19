@@ -20,7 +20,7 @@ Stack: Python · Django 5.2 · MySQL (o SQLite para probar) · HTML5 · CSS3 · 
 | `esqueleto/` | El esqueleto de 6 pantallas como sitio web estático, listo para publicar en Vercel |
 | `config/`, `usuarios/`, `eventos/`, `inscripciones/` | El MVP en Django (backend) |
 | `templates/`, `static/` | Las pantallas del MVP (HTML, CSS y JavaScript) |
-| `tests/` | 12 pruebas automatizadas con pytest |
+| `tests/` | 13 pruebas automatizadas con pytest |
 | `iniciar.bat` | Instala y arranca todo con doble clic (Windows) |
 | `iniciar.sh` | Lo mismo para macOS o Linux |
 | `publicar.bat` | Sube el proyecto a tu GitHub y publica el esqueleto en tu Vercel (Windows) |
@@ -103,20 +103,27 @@ Contraseña para todos: **`Cartaviva2026!`**
 ## 4. Usar MySQL (requisito de la guía)
 
 1. Instala MySQL 8 (o XAMPP y enciende **MySQL** en su panel).
-2. Crea la base de datos. En MySQL Workbench, o en la consola de MySQL:
-   ```sql
-   CREATE DATABASE cartaviva CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+2. Crea la base de datos y su usuario con el script del proyecto. Antes, abre
+   `docs/mysql/crear_bd.sql` y cambia `cambia-esta-clave` por una contraseña tuya:
    ```
+   mysql -u root -p < docs/mysql/crear_bd.sql
+   ```
+   (En MySQL Workbench: *File › Open SQL Script*, elige el archivo y dale al rayo.)
 3. Abre el archivo `.env` y cambia:
    ```
    DB_ENGINE=mysql
-   DB_USER=root
-   DB_PASSWORD=tu_contraseña_de_mysql
+   DB_USER=cartaviva
+   DB_PASSWORD=la_contraseña_que_pusiste_en_el_script
    ```
-   (En XAMPP el usuario es `root` y la contraseña va vacía.)
 4. Ejecuta `python manage.py migrate` y `python manage.py cargar_demo`, o vuelve a abrir `iniciar.bat`.
+5. Comprueba la conexión:
+   ```
+   python manage.py estado_bd
+   ```
+   Debe decir `Motor: MySQL`, `Migraciones: al día` y cuántos usuarios, eventos e inscripciones hay guardados.
 
-El conector es **PyMySQL**, que se instala con pip sin compilar nada.
+El conector es **PyMySQL**, que se instala con pip sin compilar nada. El usuario `cartaviva`
+solo tiene permisos sobre su propia base, no sobre todo el servidor.
 
 ---
 
@@ -128,7 +135,7 @@ Con el entorno activado (`.venv\Scripts\activate`):
 pytest -v
 ```
 
-Son 12 pruebas (la guía pide mínimo 6). Cubren el estado del evento, la tasa de asistencia, los planes relámpago, la ubicación dentro de Cartagena, la autorización de datos en el registro, el rechazo a menores en eventos +18, el cupo y la doble inscripción, los permisos por rol, la validación ciega del QR y la configuración de seguridad para producción.
+Son 13 pruebas (la guía pide mínimo 6). Cubren el estado del evento, la tasa de asistencia, los planes relámpago, la ubicación dentro de Cartagena, la autorización de datos en el registro, el rechazo a menores en eventos +18, el cupo y la doble inscripción, los permisos por rol, la validación ciega del QR, el estado de la base de datos y la configuración de seguridad para producción.
 
 ---
 
