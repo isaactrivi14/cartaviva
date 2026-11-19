@@ -9,6 +9,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="{% static 'css/cartaviva.css' %}">
+  <script src="{% static 'js/mensajes.js' %}" defer></script>
   {% block head %}{% endblock %}
 </head>
 <body>
@@ -39,8 +40,13 @@
   <main class="principal">
     <div class="contenedor">
       {% if messages %}
-        <div class="mensajes" role="status">
-          {% for m in messages %}<div class="mensaje mensaje--{{ m.tags }}">{{ m }}</div>{% endfor %}
+        <div class="mensajes">
+          {% for m in messages %}
+          <div class="mensaje mensaje--{{ m.level_tag }}" role="{% if m.level_tag == 'error' %}alert{% else %}status{% endif %}"{% if m.level_tag == 'success' or m.level_tag == 'info' %} data-ocultar{% endif %}>
+            <span>{{ m }}</span>
+            <button type="button" class="mensaje__cerrar" aria-label="Cerrar mensaje">&times;</button>
+          </div>
+          {% endfor %}
         </div>
       {% endif %}
       {% block contenido %}{% endblock %}

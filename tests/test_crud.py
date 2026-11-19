@@ -69,6 +69,16 @@ def test_eliminar_no_acepta_get(client, anfitrion, hacer_evento):
     assert Evento.objects.filter(pk=evento.pk).exists()
 
 
+def test_formulario_invalido_no_guarda_y_muestra_resumen_de_errores(client, anfitrion, categoria):
+    client.force_login(anfitrion)
+    respuesta = client.post(reverse("eventos:crear"), datos_evento(categoria, titulo="abc", cupo_maximo="0"))
+    assert respuesta.status_code == 200
+    html = respuesta.content.decode()
+    assert 'id="resumen-errores"' in html
+    assert "El título debe tener al menos 5 caracteres." in html
+    assert Evento.objects.count() == 0
+
+
 # --- Sesión --------------------------------------------------------------------
 
 def test_login_y_logout_muestran_mensaje(client, asistente):

@@ -131,7 +131,6 @@ def crear(request):
             evento = form.save()
             messages.success(request, f"Publicaste «{evento.titulo}». Ya aparece en el mapa.")
             return redirect("eventos:panel")
-        messages.error(request, "No se pudo guardar. Revisa los campos marcados.")
     return render(request, "eventos/formulario.html", {"form": form, "modo": "crear", "centro": _centro()})
 
 
@@ -147,7 +146,6 @@ def editar(request, pk):
             form.save()
             messages.success(request, "Cambios guardados.")
             return redirect("eventos:panel")
-        messages.error(request, "No se pudo guardar. Revisa los campos marcados.")
     return render(request, "eventos/formulario.html", {"form": form, "modo": "editar", "evento": evento, "centro": _centro()})
 
 

@@ -6,9 +6,9 @@
 <p><a href="{% url 'eventos:panel' %}">← Volver al panel</a></p>
 <h1>{% if modo == "crear" %}Crear evento{% else %}Editar «{{ evento.titulo }}»{% endif %}</h1>
 
+{% include "partials/resumen_errores.html" %}
 <form method="post" novalidate class="rejilla rejilla--2">
   {% csrf_token %}
-  {% if form.non_field_errors %}<div class="mensaje mensaje--error">{{ form.non_field_errors|join:" " }}</div>{% endif %}
   <div class="tarjeta pila">
     {% include "partials/campo.html" with campo=form.titulo %}
     {% include "partials/campo.html" with campo=form.categoria %}

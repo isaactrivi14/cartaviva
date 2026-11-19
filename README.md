@@ -20,7 +20,7 @@ Stack: Python · Django 5.2 · MySQL (o SQLite para probar) · HTML5 · CSS3 · 
 | `esqueleto/` | El esqueleto de 6 pantallas como sitio web estático, listo para publicar en Vercel |
 | `config/`, `usuarios/`, `eventos/`, `inscripciones/` | El MVP en Django (backend) |
 | `templates/`, `static/` | Las pantallas del MVP (HTML, CSS y JavaScript) |
-| `tests/` | 18 pruebas automatizadas con pytest |
+| `tests/` | 19 pruebas automatizadas con pytest |
 | `iniciar.bat` | Instala y arranca todo con doble clic (Windows) |
 | `iniciar.sh` | Lo mismo para macOS o Linux |
 | `publicar.bat` | Sube el proyecto a tu GitHub y publica el esqueleto en tu Vercel (Windows) |
@@ -135,7 +135,7 @@ Con el entorno activado (`.venv\Scripts\activate`):
 pytest -v
 ```
 
-Son 18 pruebas (la guía pide mínimo 6). Cubren el CRUD completo de eventos, el inicio y cierre de sesión, el estado del evento, la tasa de asistencia, los planes relámpago, la ubicación dentro de Cartagena, la autorización de datos en el registro, el rechazo a menores en eventos +18, el cupo y la doble inscripción, los permisos por rol, la validación ciega del QR, el estado de la base de datos y la configuración de seguridad para producción.
+Son 19 pruebas (la guía pide mínimo 6). Cubren el CRUD completo de eventos, el inicio y cierre de sesión, el estado del evento, la tasa de asistencia, los planes relámpago, la ubicación dentro de Cartagena, la autorización de datos en el registro, el rechazo a menores en eventos +18, el cupo y la doble inscripción, los permisos por rol, la validación ciega del QR, el estado de la base de datos y la configuración de seguridad para producción.
 
 Los fallos que encontramos y cómo se corrigieron están en [`docs/REPORTE_INCIDENCIAS.md`](docs/REPORTE_INCIDENCIAS.md).
 
