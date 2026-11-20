@@ -209,3 +209,17 @@ Cada vez que hagan *Commit* y *Sync* en VS Code, Vercel vuelve a publicar solo.
 - [ ] HTTPS activo (necesario para que el escáner use la cámara del celular)
 - [ ] `python manage.py check --deploy` sin advertencias (lo comprueba la prueba `test_configuracion_de_produccion_pasa_check_deploy`)
 - [ ] Crear el superusuario con `python manage.py createsuperuser`
+
+## 9. API para la app móvil del escáner
+
+La app [Cartaviva Escáner](https://github.com/isaactrivi14/cartaviva-escaner) (Expo / React Native) usa una API con token firmado, sin cookies:
+
+| Método | Ruta | Qué hace |
+|---|---|---|
+| `POST` | `/api/v1/sesion` | `{usuario, clave}` → `{token, alias, rol}`. Solo anfitriones y administradores. |
+| `GET` | `/api/v1/eventos` | Eventos vigentes que el anfitrión puede escanear. |
+| `POST` | `/api/v1/eventos/<id>/validar` | `{codigo, confirmar}` → la misma validación ciega del escáner web. |
+
+- El token se envía en la cabecera `Authorization: Bearer <token>`, vence a las 12 horas y deja de servir si el anfitrión cambia su contraseña.
+- La lógica del QR (`revisar_pase`) es la misma para la web y la app. El ingreso se registra con una actualización condicional, así dos escáneres no pueden registrar el mismo pase.
+- Pruebas: `tests/test_api_movil.py`.
