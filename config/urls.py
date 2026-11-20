@@ -7,6 +7,7 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("cuenta/", include("usuarios.urls")),
     path("pases/", include("inscripciones.urls")),
+    path("api/v1/", include("inscripciones.urls_api")),  # app móvil del escáner
     path("", include("eventos.urls")),
 ]
 

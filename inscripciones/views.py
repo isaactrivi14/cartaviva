@@ -109,35 +109,46 @@ def validar(request, evento_id):
         datos = json.loads(request.body or "{}")
     except json.JSONDecodeError:
         datos = {}
-    codigo = str(datos.get("codigo", "")).strip()
-    confirmar = bool(datos.get("confirmar"))
+    return JsonResponse(revisar_pase(evento, datos.get("codigo", ""), bool(datos.get("confirmar"))))
 
-    token = Inscripcion.token_desde_codigo(codigo)
+
+def revisar_pase(evento, codigo, confirmar=False, construir_url=None):
+    """
+    Reglas de la validación ciega, compartidas por el escáner web y la app móvil.
+    Devuelve un diccionario listo para JSON. `construir_url` convierte la ruta de
+    la foto en una URL absoluta (la app móvil no comparte dominio con el servidor).
+    """
+    token = Inscripcion.token_desde_codigo(str(codigo or "").strip())
     if token is None:
-        return JsonResponse({"autorizado": False, "mensaje": "Código inválido o alterado."})
+        return {"autorizado": False, "mensaje": "Código inválido o alterado."}
 
     inscripcion = Inscripcion.objects.select_related("asistente").filter(token=token).first()
     if inscripcion is None or inscripcion.evento_id != evento.pk:
-        return JsonResponse({"autorizado": False, "mensaje": "Este pase no es de este evento."})
+        return {"autorizado": False, "mensaje": "Este pase no es de este evento."}
 
     asistente = inscripcion.asistente
+    foto = asistente.foto.url if asistente.foto else None
     respuesta = {
         "alias": asistente.alias,
-        "foto": asistente.foto.url if asistente.foto else None,
+        "foto": construir_url(foto) if foto and construir_url else foto,
         "mayor_18": asistente.es_mayor_de_edad,
         "ya_ingreso": inscripcion.check_in_at is not None,
     }
 
     if inscripcion.check_in_at:
         hora = timezone.localtime(inscripcion.check_in_at).strftime("%I:%M %p")
-        return JsonResponse({**respuesta, "autorizado": False, "mensaje": f"Este pase ya se usó a las {hora}."})
+        return {**respuesta, "autorizado": False, "mensaje": f"Este pase ya se usó a las {hora}."}
     if evento.solo_mayores_18 and not asistente.es_mayor_de_edad:
-        return JsonResponse({**respuesta, "autorizado": False, "mensaje": "Evento solo para mayores de 18."})
+        return {**respuesta, "autorizado": False, "mensaje": "Evento solo para mayores de 18."}
 
     if confirmar:
-        inscripcion.check_in_at = timezone.now()
-        inscripcion.save(update_fields=["check_in_at"])
-        return JsonResponse({**respuesta, "autorizado": True, "registrado": True,
-                             "mensaje": "Ingreso registrado.", "ingresados": evento.ingresados, "inscritos": evento.inscritos})
+        # Actualización condicional: si dos escáneres leen el mismo pase a la vez,
+        # solo uno logra registrar el ingreso.
+        registrado = Inscripcion.objects.filter(pk=inscripcion.pk, check_in_at__isnull=True).update(
+            check_in_at=timezone.now())
+        if not registrado:
+            return {**respuesta, "autorizado": False, "ya_ingreso": True, "mensaje": "Este pase acaba de usarse."}
+        return {**respuesta, "autorizado": True, "registrado": True,
+                "mensaje": "Ingreso registrado.", "ingresados": evento.ingresados, "inscritos": evento.inscritos}
 
-    return JsonResponse({**respuesta, "autorizado": True, "registrado": False, "mensaje": "Pase autorizado."})
+    return {**respuesta, "autorizado": True, "registrado": False, "mensaje": "Pase autorizado."}
